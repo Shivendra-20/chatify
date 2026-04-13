@@ -3,35 +3,50 @@ import "dotenv/config";
 import authRoutes from "./routes/auth.route.js";
 import HealthcheckRoute from "./routes/Healthcheck.route.js";
 import MessageRoute from "./routes/message.route.js";
-import path from "path";
-
-const app = express();
-const __dirname = path.resolve();
+import { connectDB } from "./lib/db.js";
+import cors from 'cors'
 
 const PORT = process.env.PORT || 5000;
 
-// ✅ IMPORTANT
-app.use(express.json());
+const app = express();
 
-// API routes
+app.use(cors({
+  origin: "https://your-frontend.vercel.app",
+  credentials: true
+}));
+
+// ✅ Middleware
+app.use(express.json());       // const { yahan pr jo hoga usko samajne ke liya h yeh line } = ....
+
+// ✅ API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', MessageRoute);
-
 // health route
 app.use('/api/health', HealthcheckRoute);
 
-// production setup
-if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-    app.get(/.*/, (_, res) => {
-        if (req.path.startsWith("/api")) {
-            return res.status(404).json({ message: "API route not found" });
-        }
-        res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-    });
-}
-
+// ✅ Start server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    connectDB();
 });
+
+
+
+
+
+
+
+
+// ***************************** NOT USE **********************************************
+
+// production setup --> This is for combined deployment of backend and frontend
+// if (process.env.NODE_ENV === "production") {
+//     app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+//     app.get(/.*/, (_, res) => {
+//         if (req.path.startsWith("/api")) {
+//             return res.status(404).json({ message: "API route not found" });
+//         }
+//         res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+//     });
+// }
