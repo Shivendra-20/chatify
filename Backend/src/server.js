@@ -5,6 +5,7 @@ import HealthcheckRoute from "./routes/Healthcheck.route.js";
 import MessageRoute from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import cors from 'cors'
+import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT || 5000;
 
@@ -17,12 +18,16 @@ app.use(cors({
 
 // ✅ Middleware
 app.use(express.json());       // const { yahan pr jo hoga usko samajne ke liya h yeh line } = ....
+app.use(cookieParser());
 
 // ✅ API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', MessageRoute);
 // health route
 app.use('/api/health', HealthcheckRoute);
+app.get("/", (req, res) => {
+  res.send("Backend API is running");
+});
 
 // ✅ Start server
 app.listen(PORT, () => {
