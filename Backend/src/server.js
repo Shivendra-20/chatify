@@ -1,5 +1,5 @@
 import express from "express";
-import "dotenv/config";
+import { ENV } from "./lib/env.js";
 import authRoutes from "./routes/auth.route.js";
 import HealthcheckRoute from "./routes/Healthcheck.route.js";
 import MessageRoute from "./routes/message.route.js";
@@ -7,7 +7,7 @@ import { connectDB } from "./lib/db.js";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 
-const PORT = process.env.PORT || 5000;
+const PORT = ENV.PORT || 5000;
 
 const app = express();
 
