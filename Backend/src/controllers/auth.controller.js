@@ -3,22 +3,30 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
 import { sendWelcomeEmail } from "../email/emailHandler.js";
 import { ENV } from "../lib/env.js";
+import cloudinary from "../lib/cloudinary.js";
 
 /* Flow for signup
 
-Get data from req.body
-Validate input
-Check existing user
-Get file paths
-Upload images to cloud
-Create user in DB
-Remove sensitive data
-Send response
-If error → cleanup images
-
+Frontend
+  ↓
+API Request (/signup)
+  ↓
+Validation Layer (empty check)
+  ↓
+Business Rules (email format, password length)
+  ↓
+DB Check (user exists?)
+  ↓
+Hash Password (bcrypt)
+  ↓
+Create User in DB
+  ↓
+Generate JWT Token
+  ↓
+Send Response to Frontend
+  ↓
+Async Task: Send Welcome Email
  */
-
-
 export const signup = async (req, res) =>{
     const { fullName, email, password } = req.body;
 
@@ -83,6 +91,25 @@ export const signup = async (req, res) =>{
     }
 }
 
+/* Flow for login
+Frontend
+   ↓
+Send email + password
+   ↓
+Backend API (/login)
+   ↓
+Check input validation
+   ↓
+Find user in DB
+   ↓
+Compare password (bcrypt)
+   ↓
+Generate JWT token
+   ↓
+Send user data + token
+   ↓
+Frontend logs user in
+*/
 export const login = async (req, res) =>{
     const { email, password } = req.body;
 
@@ -112,7 +139,47 @@ export const login = async (req, res) =>{
     }
 }
 
+/* Flow for logout
+Frontend (Logout button click)
+   ↓
+POST /api/auth/logout
+   ↓
+Auth Controller (logout)
+   ↓
+Clear JWT Cookie (set maxAge = 0)
+   ↓
+Browser deletes token
+   ↓
+User becomes unauthenticated
+   ↓
+Frontend redirects to login page
+*/
 export const logout = async (req,res)=>{
     res.cookie("jwt","",{maxAge:0})
     res.status(200).json({message:"Logged out successfully"})
+}
+
+export const updateProfile = async (req,res) =>{
+   try {
+     const { profilePic } = req.body;
+     if(!profilePic) return res.status(400).json({message:"Profile pic is required"});
+ 
+     const userId = req.user._id;
+ 
+     const uploadResponse = await cloudinary.uploader.upload(profilePic);
+     
+     const updateUser = await User.findByIdAndUpdate(
+         userId,
+         { profilePic: uploadResponse.secure_url },
+         { new:true }
+     );
+ 
+     res.status(200).json(updateUser);
+ 
+   } catch (error) {
+    console.log("Error in update profile : ",error);
+    res.status(500).json({ message: "Internal server error" });
+   }
+
+
 }
