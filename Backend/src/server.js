@@ -17,6 +17,7 @@ app.use(cors({
 }));
 
 // ✅ Middleware
+//payload too large error
 app.use(express.json());       // const { yahan pr jo hoga usko samajne ke liya h yeh line } = ....
 app.use(cookieParser());
 
@@ -31,7 +32,7 @@ app.get("/", (req, res) => {
 
 // ✅ Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port http://localhost:${PORT}`);
     connectDB();
 });
 
