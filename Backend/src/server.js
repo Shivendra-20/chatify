@@ -13,7 +13,7 @@ const PORT = ENV.PORT || 5000;
 const app = express();
 
 app.use(cors({
-  origin: "https://your-frontend.vercel.app",
+  origin: ENV.CLIENT_URL,
   credentials: true
 }));
 
