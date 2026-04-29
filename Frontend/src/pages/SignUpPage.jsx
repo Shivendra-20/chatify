@@ -4,13 +4,7 @@ import { useAuthStore } from "../store/userAuthStore.js";
 import toast from "react-hot-toast";
 
 function SignUpPage() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  
+  const [formData, setFormData] = useState({fullName: "",email: "",password: "",confirmPassword: "",});
   const { signup, isSigningup } = useAuthStore();
 
   const handleInputChange = (e) => {
@@ -31,8 +25,8 @@ function SignUpPage() {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-slate-100 px-4 py-10 flex items-center justify-center">
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center opacity-30" />
+    <section className="relative min-h-screen overflow-hidden bg-gray-800 px-4 py-10 flex items-center justify-center">
+      {/* <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center opacity-30" /> */}
       {/* <div className="absolute inset-0 bg-gradient-to-br from-indigo-100/80 via-slate-100/90 to-cyan-100/80" /> */}
       {/* <div className="absolute -top-20 left-0 h-72 w-72 rounded-full bg-blue-300/35 blur-3xl animate-pulse" /> */}
       {/* <div className="absolute -bottom-20 right-0 h-72 w-72 rounded-full bg-fuchsia-300/30 blur-3xl animate-pulse" /> */}
