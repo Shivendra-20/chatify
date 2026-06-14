@@ -10,7 +10,7 @@ import NoConversationPlaceholder from '../components/NoConversationPlaceholder.j
 function ChatPage() {
  const { activeTab, selectedUser } = useChatStore();
   return (
-    <div className='relative w-full max-w-6xl h-[800px] flex'>
+    <div className='relative w-full max-w-6xl h-[800px] flex h-screen'>
 
         {/* Left Side */}
         <div className='w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col'>
