@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from '../lib/axios.js'
 import toast from "react-hot-toast";
 
-export const useAuthStore = create((set) =>({
+export const useAuthStore = create((set) => ({
     authUser :null,
     isCheckingAuth:true,
     isSigningup:false,
@@ -10,7 +10,7 @@ export const useAuthStore = create((set) =>({
 
     checkAuth:async () =>{
         try {
-            const res  = await axiosInstance.get("/auth/check");
+            const res  = await axiosInstance.get("api/auth/check");
             set({authUser:res.data});
         } catch (error) {
             console.log("Error in Authcheck:",error);
@@ -69,6 +69,17 @@ export const useAuthStore = create((set) =>({
             toast.error("Error logging out");
             console.log("Logout error : ",error);
         }
-    }
+    },
+    
+    updateProfile: async (data) => {    
+        try {
+            const res = await axiosInstance.put("api/auth/update-profile",data);
+            set({authUser: res.data});
+            toast.success("Profile updated successfully");
+        } catch (error) {
+            console.log("Error in update Profile : ",error);
+            toast.error(error.response.data.message);
+        }
+    },
 
 }));

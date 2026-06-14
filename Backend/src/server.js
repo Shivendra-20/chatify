@@ -6,7 +6,9 @@ import MessageRoute from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
-
+// cookie-parser is an Express middleware used to read cookies sent by the browser.
+// When a browser sends a request, cookies are included in the HTTP headers. Without cookie-parser, accessing them is inconvenient.
+// With it, Express automatically parses the cookies and puts them into req.cookies.
 
 const PORT = ENV.PORT || 5000;
 
@@ -25,7 +27,7 @@ app.use(cookieParser());
 // ✅ API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', MessageRoute);
-// health route
+// ✅ health route
 app.use('/api/health', HealthcheckRoute);
 app.get("/", (req, res) => {
   res.send("Backend API is running");

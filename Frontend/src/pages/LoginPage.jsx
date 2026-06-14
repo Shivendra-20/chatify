@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import { useAuthStore } from '../store/userAuthStore.js';
+import { useAuthStore } from '../store/useAuthStore.js';
 
 function LoginPage() {
 
@@ -13,7 +13,8 @@ function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    login({email: formData.email,
+    login({
+          email: formData.email,
           password : formData.password
     });
   }
