@@ -19,16 +19,31 @@ function ChatHeader() {
     return () => window.removeEventListener("keydown", handleEscKey);
   }, [setSelectedUser]);
 
+  console.log("selectedUser._id =", selectedUser._id);
+console.log("onlineUsers =", onlineUsers);
+console.log("isOnline =", isOnline);
+
   return (
     <div
       className="flex justify-between items-center bg-slate-800/50 border-b
    border-slate-700/50 max-h-[84px] px-6 flex-1"
     >
+      
       <div className="flex items-center space-x-3">
         <div className={`avatar ${isOnline ? "online" : "offline"}`}>
-          <div className="w-12 rounded-full">
-            <img src={selectedUser.profilePic || "/avatar.jpg"} alt={selectedUser.fullName} />
-          </div>
+         
+    <div className="relative">
+
+        <img src={selectedUser.profilePic || "/avatar.jpg"}
+         alt={selectedUser.fullName}
+        className="w-12 h-12 rounded-full object-cover"/>
+        
+        {isOnline && (
+        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-800"></span>
+        )}
+
+    </div>
+    
         </div>
 
         <div>

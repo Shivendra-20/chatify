@@ -31,16 +31,16 @@ function ProfileHeader() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {/* AVATAR */}
-          <div className="avatar online">
-            <div className="w-14 rounded-full">
+          <div className="relative">
+            <div className="w-14 h-14 rounded-full overflow-hidden">
               <button
-                className="size-full overflow-hidden relative group"
+                className="w-full h-full relative group"
                 onClick={() => fileInputRef.current.click()}
               >
                 <img
-                  src={selectedImg || authUser.profilePic || "/avatar.jpg"}
+                  src={selectedImg || authUser?.profilePic || "/avatar.jpg"}
                   alt="User image"
-                  className="size-full object-cover"
+                  className="w-full h-full object-cover"
                 />
 
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -48,6 +48,9 @@ function ProfileHeader() {
                 </div>
               </button>
             </div>
+
+            {/* Online Indicator */}
+            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-slate-800"></span>
 
             <input
               type="file"
@@ -88,8 +91,10 @@ function ProfileHeader() {
             }}
           >
             {isSoundEnabled ? (
-              <Volume2Icon className="size-5" />) : (<VolumeOffIcon className="size-5" />)}
-          
+              <Volume2Icon className="size-5" />
+            ) : (
+              <VolumeOffIcon className="size-5" />
+            )}
           </button>
         </div>
       </div>

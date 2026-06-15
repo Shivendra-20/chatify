@@ -1,61 +1,35 @@
 import express from "express";
-import { ENV } from "./lib/env.js";
-import authRoutes from "./routes/auth.route.js";
-import HealthcheckRoute from "./routes/Healthcheck.route.js";
-import MessageRoute from "./routes/message.route.js";
-import { connectDB } from "./lib/db.js";
-import cors from 'cors'
 import cookieParser from "cookie-parser";
-// cookie-parser is an Express middleware used to read cookies sent by the browser.
-// When a browser sends a request, cookies are included in the HTTP headers. Without cookie-parser, accessing them is inconvenient.
-// With it, Express automatically parses the cookies and puts them into req.cookies.
+import path from "path";
+import cors from "cors";
 
-const PORT = ENV.PORT || 5000;
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
+import { connectDB } from "./lib/db.js";
+import { ENV } from "./lib/env.js";
+import { app, server } from "./lib/socket.js";
 
-const app = express();
+const __dirname = path.resolve();
 
-app.use(cors({
-  origin: ENV.CLIENT_URL,
-  credentials: true
-}));
+const PORT = ENV.PORT || 3000;
 
-// ✅ Middleware
-//payload too large error
-app.use(express.json());       // const { yahan pr jo hoga usko samajne ke liya h yeh line } = ....
+app.use(express.json({ limit: "5mb" })); // req.body
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 
-// ✅ API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/messages', MessageRoute);
-// ✅ health route
-app.use('/api/health', HealthcheckRoute);
-app.get("/", (req, res) => {
-  res.send("Backend API is running");
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+
+// make ready for deployment
+if (ENV.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (_, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
+}
+
+server.listen(PORT, () => {
+  console.log("Server running on port: " + PORT);
+  connectDB();
 });
-
-// ✅ Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
-    connectDB();
-});
-
-
-
-
-
-
-
-
-// ***************************** NOT USE **********************************************
-
-// production setup --> This is for combined deployment of backend and frontend
-// if (process.env.NODE_ENV === "production") {
-//     app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-//     app.get(/.*/, (_, res) => {
-//         if (req.path.startsWith("/api")) {
-//             return res.status(404).json({ message: "API route not found" });
-//         }
-//         res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-//     });
-// }
